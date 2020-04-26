@@ -62,10 +62,18 @@ sub decode_term {
                 subtype => Erlang::Type::INTEGER_EXT,
             );
             return ret(1, $int);
-        } elsif(is_small_tuple($type)) {
+        } elsif(is_tuple($type)) {
             my $arity;
-            sread($s, \$arity, 1);
-            $arity = unpack('C', $arity);
+            my $subtype;
+            if(is_small_tuple($type)) {
+                sread($s, \$arity, 1);
+                $arity = unpack('C', $arity);
+                $subtype = Erlang::Type::SMALL_TUPLE_EXT,
+            } else {
+                sread($s, \$arity, 4);
+                $arity = unpack('N', $arity);
+                $subtype = Erlang::Type::LARGE_TUPLE_EXT,
+            }
             my @elements;
             for(1..$arity) {
                 my ($ok, $element) = decode_term($s);
@@ -78,7 +86,7 @@ sub decode_term {
             my $tuple = Erlang::Tuple->new(
                 elements => \@elements,
                 arity => $arity,
-                subtype => Erlang::Type::SMALL_TUPLE_EXT,
+                subtype => $subtype,
             );
             return ret(1, $tuple);
         } elsif(is_binary($type)) {

@@ -9,6 +9,7 @@ our @EXPORT_OK = qw(
     is_map
     is_small_tuple
     is_large_tuple
+    is_tuple
     is_8bit_integer
     is_32bit_integer
     is_float
@@ -70,6 +71,10 @@ sub is_small_tuple {
 
 sub is_large_tuple {
     return ord($_[0]) == LARGE_TUPLE_EXT;
+}
+
+sub is_tuple {
+    return is_small_tuple($_[0]) || is_large_tuple($_[0]);
 }
 
 sub is_8bit_integer {
