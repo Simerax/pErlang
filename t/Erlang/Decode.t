@@ -76,7 +76,7 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
 {
     my $TEST_NAME = 'Decode uncompressed tuple with atom and small integer';
-    my $message = "\x83\x68\x02\x64\x0\x02\x6F\x6B\x61\x19"; # Integer -293847
+    my $message = "\x83\x68\x02\x64\x0\x02\x6F\x6B\x61\x19"; # tuple {ok, 25}
 
     my $stream;
     open($stream, '<', \$message);
