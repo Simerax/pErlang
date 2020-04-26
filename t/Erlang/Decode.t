@@ -1,4 +1,4 @@
-use Test::More tests => 37;
+use Test::More tests => 43;
 use Erlang::Type;
 
 use utf8;
@@ -136,3 +136,19 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     ok($decoded->value() == 2.3, $TEST_NAME);
 }
 
+{
+    my $TEST_NAME = 'Decode uncompressed list message';
+    # list with two binaries
+    # ["hello", "bye"]
+    my $message = "\x83\x6C\x00\x00\x00\x02\x6D\x00\x00\x00\x05\x68\x65\x6C\x6C\x6F\x6D\x00\x00\x00\x03\x62\x79\x65\x6A";
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($decoded, 'Erlang::List');
+    ok($decoded->length() == 2);
+    ok($decoded->at(0) eq "hello");
+    ok($decoded->at(1) eq "bye");
+    ok($decoded->tail() eq undef, $TEST_NAME);
+}

@@ -5,6 +5,7 @@ use Erlang::Binary;
 use Erlang::Integer;
 use Erlang::Tuple;
 use Erlang::Float;
+use Erlang::List;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -29,14 +30,20 @@ sub decode {
 }
 
 sub decode_term {
-    my ($s) = @_;
+    my ($s, $next_item_type) = @_;
 
     while(1) {
         my $type;
-        my $read = sread($s, \$type, 1);
-        if ($read <= 0) {
-            return ret(0, "No Input");
+
+        if(defined $next_item_type) {
+            $type = $nextitem_type;
+        } else {
+            my $read = sread($s, \$type, 1);
+            if ($read <= 0) {
+                return ret(0, "No Input");
+            }
         }
+
         if(is_atom($type)) {
             my $len;
             my $subtype;
@@ -89,6 +96,38 @@ sub decode_term {
                 value => $value,
             );
             return ret(1, $float);
+        } elsif(is_list($type)) {
+            my $len;
+            sread($s, \$len, 4);
+            $len = unpack("N", $len);
+            my @elements;
+            for(1..$len) {
+                my ($ok, $element) = decode_term($s);
+                if($ok) {
+                    push @elements, $element;
+                } else {
+                    return ret($ok, $element);
+                }
+            }
+
+            my $list = Erlang::List->new(
+                elements => \@elements,
+                tail => undef,
+            );
+
+            # a normal list has a tail of "NIL" but it doesn't have to be that way
+            my $next_item_type;
+            my $read = sread($s, \$next_item_type, 1);
+
+            if($read > 0 && !is_nil($next_item_type)) { # looks like this list has a tail
+                my ($ok, $elements) = decode_term($s, $next_item_type);
+                if($ok) {
+                    $list->tail($elements);
+                } else {
+                    return ret(0, $elements);
+                }
+            }
+            return ret(1, $list);
         } elsif(is_tuple($type)) {
             my $arity;
             my $subtype;

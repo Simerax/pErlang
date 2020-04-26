@@ -19,12 +19,15 @@ our @EXPORT_OK = qw(
     is_atom_utf8
     is_atom_utf8_small
     is_atom_ext
+    is_nil
 );
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
 
 
 
 use constant {
+    NIL_EXT => 106,
+
     ATOM_EXT => 100,
     SMALL_ATOM_UTF8_EXT => 119,
     ATOM_UTF8_EXT => 118,
@@ -44,6 +47,10 @@ use constant {
     LIST_EXT => 108,
     BINARY_EXT => 109,
 };
+
+sub is_nil {
+    return ord($_[0]) == NIL_EXT;
+}
 
 sub is_binary {
     return ord($_[0]) == BINARY_EXT;
