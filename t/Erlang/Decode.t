@@ -26,7 +26,7 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 {
     my $TEST_NAME = 'Decode uncompressed SMALL_ATOM_UTF8_EXT message';
 
-    # Erlang External Term Format Message uncompressed ATOM_EXT with value "shutdown"
+    # Small UTF8 Atom with value 'мои'
     my $message = "\x83\x77\x06\xD0\xBC\xD0\xBE\xD0\xB8";
 
     my $stream;
@@ -74,7 +74,6 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    $Erlang::Decode::USE_PERL_READ_FUNCTION = 1; # Sysread can't handle in memory streams
     my ($ok, $decoded) = Erlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'Erlang::Integer');
