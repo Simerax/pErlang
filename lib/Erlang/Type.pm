@@ -18,6 +18,7 @@ our @EXPORT_OK = qw(
     is_atom
     is_atom_utf8
     is_atom_utf8_small
+    is_atom_ext
 );
 our %EXPORT_TAGS = (all => [@EXPORT_OK]);
 
@@ -100,6 +101,9 @@ sub is_old_float {
 }
 
 sub is_atom {
+    return is_atom_ext($_[0]) || is_atom_utf8($_[0]) || is_atom_utf8_small($_[0]);
+}
+sub is_atom_ext {
     return ord($_[0]) == ATOM_EXT;
 }
 sub is_atom_utf8 {

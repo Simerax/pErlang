@@ -39,13 +39,21 @@ sub decode_term {
         }
         if(is_atom($type)) {
             my $len;
-            sread($s, \$len, 2);
-            $len = unpack("n", $len);
+            my $subtype;
+            if(is_atom_ext($type) || is_atom_utf8($type)) {
+                sread($s, \$len, 2);
+                $len = unpack("n", $len);
+                $subtype = is_atom_utf8($type) ? Erlang::Type::ATOM_UTF8_EXT : Erlang::Type::ATOM_EXT;
+            } elsif(is_atom_utf8_small($type)) {
+                sread($s, \$len, 1);
+                $len = unpack('C', $len);
+                $subtype = Erlang::Type::SMALL_ATOM_UTF8_EXT;
+            }
             my $atom_name;
             sread($s, \$atom_name, $len);
             my $atom = Erlang::Atom->new(
                 name => $atom_name,
-                subtype => Erlang::Type::ATOM_EXT,
+                subtype => $subtype,
             );
             return ret(1, $atom);
         } elsif(is_8bit_integer($type)) {

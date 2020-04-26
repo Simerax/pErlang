@@ -1,5 +1,7 @@
-use Test::More tests => 33;
+use Test::More tests => 37;
 use Erlang::Type;
+
+use utf8;
 
 require_ok('Erlang::Decode');
 
@@ -20,6 +22,25 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     ok($ok == 1);
     isa_ok($decoded, 'Erlang::Atom');
     ok($decoded->name() eq 'shutdown', $TEST_NAME);
+}
+{
+    my $TEST_NAME = 'Decode uncompressed SMALL_ATOM_UTF8_EXT message';
+
+    # Erlang External Term Format Message uncompressed ATOM_EXT with value "shutdown"
+    my $message = "\x83\x77\x06\xD0\xBC\xD0\xBE\xD0\xB8";
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($decoded, 'Erlang::Atom');
+    print "--> ".$decoded->subtype()."\n";
+    ok($decoded->subtype() == Erlang::Type::SMALL_ATOM_UTF8_EXT);
+
+    my $expected = 'мои';
+    utf8::encode($expected);
+
+    ok($expected eq $decoded->name(), $TEST_NAME);
 }
 
 {
