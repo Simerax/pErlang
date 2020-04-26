@@ -13,6 +13,8 @@ our @EXPORT_OK = qw(
     is_8bit_integer
     is_32bit_integer
     is_float
+    is_new_float
+    is_old_float
     is_atom
     is_atom_utf8
     is_atom_utf8_small
@@ -86,7 +88,15 @@ sub is_32bit_integer {
 }
 
 sub is_float {
+    return is_new_float($_[0]) || is_old_float($_[0]);
+}
+
+sub is_new_float {
     return ord($_[0]) == NEW_FLOAT_EXT;
+}
+
+sub is_old_float {
+    return ord($_[0]) == FLOAT_EXT;
 }
 
 sub is_atom {

@@ -4,6 +4,7 @@ use Erlang::Atom;
 use Erlang::Binary;
 use Erlang::Integer;
 use Erlang::Tuple;
+use Erlang::Float;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -32,7 +33,10 @@ sub decode_term {
 
     while(1) {
         my $type;
-        sread($s, \$type, 1);
+        my $read = sread($s, \$type, 1);
+        if ($read <= 0) {
+            return ret(0, "No Input");
+        }
         if(is_atom($type)) {
             my $len;
             sread($s, \$len, 2);
@@ -62,6 +66,21 @@ sub decode_term {
                 subtype => Erlang::Type::INTEGER_EXT,
             );
             return ret(1, $int);
+        } elsif(is_float($type)) {
+            my $value;
+            if (is_new_float($type)) {
+                sread($s, \$value, 8);
+                # FIXME: Is this portable? Perldoc says 'd' is native format
+                # but '>' specifies the endianness
+                $value = unpack('d>', $value); 
+
+            } else {
+                return ret(0, "Old Float Format not supported"); # TODO: Support old Float format
+            }
+            my $float = Erlang::Float->new(
+                value => $value,
+            );
+            return ret(1, $float);
         } elsif(is_tuple($type)) {
             my $arity;
             my $subtype;

@@ -1,4 +1,4 @@
-use Test::More tests => 29;
+use Test::More tests => 33;
 use Erlang::Type;
 
 require_ok('Erlang::Decode');
@@ -101,5 +101,18 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     isa_ok($decoded, 'Erlang::Tuple');
     ok($decoded->subtype() == Erlang::Type::LARGE_TUPLE_EXT);
     ok($decoded->arity() == 280, $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Decode uncompressed float message';
+    my $message = "\x83\x46\x40\x02\x66\x66\x66\x66\x66\x66"; # float 2.3 NEW FLOAT TYPE 70!
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($decoded, 'Erlang::Float');
+    ok($decoded->subtype() == Erlang::Type::NEW_FLOAT_EXT);
+    ok($decoded->value() == 2.3, $TEST_NAME);
 }
 
