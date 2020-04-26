@@ -2,9 +2,12 @@ package Erlang::Atom;
 use Mouse;
 use Erlang::Type;
 
+extends 'Erlang::Datastructure';
+
 use overload
     'eq' => \&equals,
-    '""' => \&to_string;
+    '""' => \&to_string,
+    '==' => \&equals;
 
 has name => (
     is => 'rw',

@@ -1,6 +1,8 @@
 package Erlang::List;
 use Mouse;
 
+extends 'Erlang::Datastructure';
+
 use Erlang::Nil;
 
 has elements => (

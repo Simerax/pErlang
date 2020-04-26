@@ -1,4 +1,4 @@
-use Test::More tests => 45;
+use Test::More tests => 49;
 use Erlang::Type;
 
 use utf8;
@@ -163,3 +163,24 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     ok($ok == 1);
     isa_ok($decoded, 'Erlang::Nil', $TEST_NAME);
 }
+
+{
+    my $TEST_NAME = 'Decode uncompressed map message';
+    # map with two keys 
+    # %{a => 2, b => "hello"}
+    my $message = "\x83\x74\x00\x00\x00\x02\x64\x00\x01\x61\x61\x02\x64\x00\x01\x62\x6D\x00\x00\x00\x05\x68\x65\x6C\x6C\x6F";
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $map) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($map, 'Erlang::Map');
+
+    my $a = $map->get(Erlang::Atom->new(name => 'a'));
+    isa_ok($a, 'Erlang::Integer');
+    my $b = $map->get(Erlang::Atom->new(name => 'b'));
+    isa_ok($b, 'Erlang::Binary');
+
+    
+}
+

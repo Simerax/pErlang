@@ -7,6 +7,7 @@ use Erlang::Tuple;
 use Erlang::Float;
 use Erlang::List;
 use Erlang::Nil;
+use Erlang::Map;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -159,6 +160,19 @@ sub decode_term {
                 subtype => $subtype,
             );
             return ret(1, $tuple);
+        } elsif(is_map($type)) {
+            my $arity;
+            sread($s, \$arity, 4);
+            $arity = unpack("N", $arity);
+            my $map = Erlang::Map->new();
+            for(my $i = 0; $i <= $arity; $i += 2) {
+                my ($ok, $key) = decode_term($s);
+                return ret(0, $key) unless $ok;
+                my ($ok, $value) = decode_term($s);
+                return ret(0, $value) unless $ok;
+                $map->put($key, $value);
+            }
+            return ret(1, $map);
         } elsif(is_binary($type)) {
             my $len;
             sread($s, \$len, 4);

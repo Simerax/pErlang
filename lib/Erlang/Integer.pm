@@ -1,6 +1,8 @@
 package Erlang::Integer;
 use Mouse;
 
+extends 'Erlang::Datastructure';
+
 has value => (
     is => 'rw',
     isa => 'Num',

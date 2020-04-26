@@ -1,6 +1,8 @@
 package Erlang::Tuple;
 use Mouse;
 
+extends 'Erlang::Datastructure';
+
 has arity => (
     is => 'rw',
     isa => 'Int',

@@ -1,6 +1,8 @@
 package Erlang::Binary;
 use Mouse;
 
+extends 'Erlang::Datastructure';
+
 use overload
     'eq' => \&equals;
 
