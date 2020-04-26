@@ -1,4 +1,4 @@
-use Test::More tests => 43;
+use Test::More tests => 45;
 use Erlang::Type;
 
 use utf8;
@@ -150,5 +150,16 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     ok($decoded->length() == 2);
     ok($decoded->at(0) eq "hello");
     ok($decoded->at(1) eq "bye");
-    ok($decoded->tail() eq undef, $TEST_NAME);
+    ok($decoded->tail()->isa('Erlang::Nil'), $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Decode uncompressed nil message';
+    my $message = "\x83\x6A"; # nil []
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($decoded, 'Erlang::Nil', $TEST_NAME);
 }

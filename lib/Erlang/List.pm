@@ -1,6 +1,8 @@
 package Erlang::List;
 use Mouse;
 
+use Erlang::Nil;
+
 has elements => (
     is => 'rw',
     isa => 'ArrayRef',
@@ -9,7 +11,7 @@ has elements => (
 
 has tail => (
     is => 'rw',
-    default => undef,
+    default => sub {Erlang::Nil->new()},
 );
 
 sub length {

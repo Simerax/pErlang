@@ -6,6 +6,7 @@ use Erlang::Integer;
 use Erlang::Tuple;
 use Erlang::Float;
 use Erlang::List;
+use Erlang::Nil;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -63,6 +64,9 @@ sub decode_term {
                 subtype => $subtype,
             );
             return ret(1, $atom);
+        } elsif(is_nil($type)) {
+            my $nil = Erlang::Nil->new();
+            return ret(1, $nil);
         } elsif(is_8bit_integer($type)) {
             my $int;
             sread($s, \$int, 1);
@@ -112,7 +116,7 @@ sub decode_term {
 
             my $list = Erlang::List->new(
                 elements => \@elements,
-                tail => undef,
+                tail => Erlang::Nil->new(),
             );
 
             # a normal list has a tail of "NIL" but it doesn't have to be that way
