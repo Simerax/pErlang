@@ -4,7 +4,6 @@ use Exporter qw(import);
 our @EXPORT_OK = qw(
     is_binary
     is_string
-    is_small_list
     is_list
     is_map
     is_small_tuple
@@ -56,13 +55,7 @@ sub is_binary {
     return ord($_[0]) == BINARY_EXT;
 }
 
-# FIXME: well...elixir uses binaries as strings
-# but maybe it's misleading for erlang?
 sub is_string {
-    return is_binary(@_);
-}
-
-sub is_small_list {
     return ord($_[0]) == STRING_EXT;
 }
 

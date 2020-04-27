@@ -8,6 +8,7 @@ use Erlang::Float;
 use Erlang::List;
 use Erlang::Nil;
 use Erlang::Map;
+use Erlang::String;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -101,6 +102,16 @@ sub decode_term {
                 value => $value,
             );
             return ret(1, $float);
+        } elsif(is_string($type)) { 
+            my $len;
+            sread($s, \$len, 2);
+            $len = unpack("n", $len);
+            my $data;
+            sread($s, \$data, $len);
+            my $string = Erlang::String->new(
+                data => $data,
+            );
+            return ret(1, $string);
         } elsif(is_list($type)) {
             my $len;
             sread($s, \$len, 4);
