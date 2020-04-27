@@ -1,14 +1,14 @@
 use Test::More tests => 8;
 
-require_ok('Erlang::String');
+require_ok('pErlang::String');
 
 {
-    my $string = Erlang::String->new(data => 'hello');
-    isa_ok($string, 'Erlang::String');
+    my $string = pErlang::String->new(data => 'hello');
+    isa_ok($string, 'pErlang::String');
     ok($string eq 'hello');
     ok($string ne 'bye');
     ok($string != 'hello'); # different types
-    ok($string != Erlang::String->new(data => 'bye'));
-    ok($string == Erlang::String->new(data => 'hello'));
+    ok($string != pErlang::String->new(data => 'bye'));
+    ok($string == pErlang::String->new(data => 'hello'));
     ok("$string" eq "hello");
 }

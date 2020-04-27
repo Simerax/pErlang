@@ -1,7 +1,7 @@
-package Erlang::Tuple;
+package pErlang::Tuple;
 use Mouse;
 
-extends 'Erlang::Datastructure';
+extends 'pErlang::Datastructure';
 
 has arity => (
     is => 'rw',
@@ -19,8 +19,8 @@ has subtype => (
     required => 1,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != Erlang::Type::SMALL_TUPLE_EXT &&
-            $type != Erlang::Type::LARGE_TUPLE_EXT )
+        if($type != pErlang::Type::SMALL_TUPLE_EXT &&
+            $type != pErlang::Type::LARGE_TUPLE_EXT )
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }

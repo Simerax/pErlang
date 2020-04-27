@@ -1,14 +1,14 @@
-package Erlang::Decode;
-use Erlang::Type qw(:all);
-use Erlang::Atom;
-use Erlang::Binary;
-use Erlang::Integer;
-use Erlang::Tuple;
-use Erlang::Float;
-use Erlang::List;
-use Erlang::Nil;
-use Erlang::Map;
-use Erlang::String;
+package pErlang::Decode;
+use pErlang::Type qw(:all);
+use pErlang::Atom;
+use pErlang::Binary;
+use pErlang::Integer;
+use pErlang::Tuple;
+use pErlang::Float;
+use pErlang::List;
+use pErlang::Nil;
+use pErlang::Map;
+use pErlang::String;
 
 # if set then perl's 'read' function is used instead of 'sysread'
 # sysread can't handle in-memory streams but guarantees to read the given byte size
@@ -53,38 +53,38 @@ sub decode_term {
             if(is_atom_ext($type) || is_atom_utf8($type)) {
                 sread($s, \$len, 2);
                 $len = unpack("n", $len);
-                $subtype = is_atom_utf8($type) ? Erlang::Type::ATOM_UTF8_EXT : Erlang::Type::ATOM_EXT;
+                $subtype = is_atom_utf8($type) ? pErlang::Type::ATOM_UTF8_EXT : pErlang::Type::ATOM_EXT;
             } elsif(is_atom_utf8_small($type)) {
                 sread($s, \$len, 1);
                 $len = unpack('C', $len);
-                $subtype = Erlang::Type::SMALL_ATOM_UTF8_EXT;
+                $subtype = pErlang::Type::SMALL_ATOM_UTF8_EXT;
             }
             my $atom_name;
             sread($s, \$atom_name, $len);
-            my $atom = Erlang::Atom->new(
+            my $atom = pErlang::Atom->new(
                 name => $atom_name,
                 subtype => $subtype,
             );
             return ret(1, $atom);
         } elsif(is_nil($type)) {
-            my $nil = Erlang::Nil->new();
+            my $nil = pErlang::Nil->new();
             return ret(1, $nil);
         } elsif(is_8bit_integer($type)) {
             my $int;
             sread($s, \$int, 1);
             $int = unpack('C', $int);
-            my $int = Erlang::Integer->new(
+            my $int = pErlang::Integer->new(
                 value => $int,
-                subtype => Erlang::Type::SMALL_INTEGER_EXT,
+                subtype => pErlang::Type::SMALL_INTEGER_EXT,
             );
             return ret(1, $int);
         } elsif(is_32bit_integer($type)) {
             my $int;
             sread($s, \$int, 4);
             $int = unpack('N!', $int);
-            my $int = Erlang::Integer->new(
+            my $int = pErlang::Integer->new(
                 value => $int,
-                subtype => Erlang::Type::INTEGER_EXT,
+                subtype => pErlang::Type::INTEGER_EXT,
             );
             return ret(1, $int);
         } elsif(is_float($type)) {
@@ -98,7 +98,7 @@ sub decode_term {
             } else {
                 return ret(0, "Old Float Format not supported"); # TODO: Support old Float format
             }
-            my $float = Erlang::Float->new(
+            my $float = pErlang::Float->new(
                 value => $value,
             );
             return ret(1, $float);
@@ -108,7 +108,7 @@ sub decode_term {
             $len = unpack("n", $len);
             my $data;
             sread($s, \$data, $len);
-            my $string = Erlang::String->new(
+            my $string = pErlang::String->new(
                 data => $data,
             );
             return ret(1, $string);
@@ -126,9 +126,9 @@ sub decode_term {
                 }
             }
 
-            my $list = Erlang::List->new(
+            my $list = pErlang::List->new(
                 elements => \@elements,
-                tail => Erlang::Nil->new(),
+                tail => pErlang::Nil->new(),
             );
 
             # a normal list has a tail of "NIL" but it doesn't have to be that way
@@ -150,11 +150,11 @@ sub decode_term {
             if(is_small_tuple($type)) {
                 sread($s, \$arity, 1);
                 $arity = unpack('C', $arity);
-                $subtype = Erlang::Type::SMALL_TUPLE_EXT,
+                $subtype = pErlang::Type::SMALL_TUPLE_EXT,
             } else {
                 sread($s, \$arity, 4);
                 $arity = unpack('N', $arity);
-                $subtype = Erlang::Type::LARGE_TUPLE_EXT,
+                $subtype = pErlang::Type::LARGE_TUPLE_EXT,
             }
             my @elements;
             for(1..$arity) {
@@ -165,7 +165,7 @@ sub decode_term {
                     return ret($ok, $element);
                 }
             }
-            my $tuple = Erlang::Tuple->new(
+            my $tuple = pErlang::Tuple->new(
                 elements => \@elements,
                 arity => $arity,
                 subtype => $subtype,
@@ -175,7 +175,7 @@ sub decode_term {
             my $arity;
             sread($s, \$arity, 4);
             $arity = unpack("N", $arity);
-            my $map = Erlang::Map->new();
+            my $map = pErlang::Map->new();
             for(my $i = 0; $i <= $arity; $i += 2) {
                 my ($ok, $key) = decode_term($s);
                 return ret(0, $key) unless $ok;
@@ -190,7 +190,7 @@ sub decode_term {
             $len = unpack("N", $len);
             my $data;
             sread($s, \$data, $len);
-            my $binary = Erlang::Binary->new(
+            my $binary = pErlang::Binary->new(
                 data => $data,
             );
             return ret(1, $binary);

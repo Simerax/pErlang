@@ -1,14 +1,14 @@
 use Test::More tests => 8;
 
-require_ok('Erlang::Binary');
+require_ok('pErlang::Binary');
 
 {
-    my $binary = Erlang::Binary->new(data => 'hello');
-    isa_ok($binary, 'Erlang::Binary');
+    my $binary = pErlang::Binary->new(data => 'hello');
+    isa_ok($binary, 'pErlang::Binary');
     ok($binary eq 'hello');
     ok($binary ne 'bye');
     ok($binary != 'hello'); # different types
-    ok($binary != Erlang::Binary->new(data => 'bye'));
-    ok($binary == Erlang::Binary->new(data => 'hello'));
+    ok($binary != pErlang::Binary->new(data => 'bye'));
+    ok($binary == pErlang::Binary->new(data => 'hello'));
     ok("$binary" eq "hello");
 }

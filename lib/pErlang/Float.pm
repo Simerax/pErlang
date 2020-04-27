@@ -1,22 +1,22 @@
-package Erlang::Integer;
+package pErlang::Float;
 use Mouse;
 
-extends 'Erlang::Datastructure';
+extends 'pErlang::Datastructure';
 
 has value => (
     is => 'rw',
     isa => 'Num',
-    required => 1,
+    default => 0.0,
 );
 
 has subtype => (
     is => 'rw',
     isa => 'Num',
-    required => 1,
+    default => pErlang::Type::NEW_FLOAT_EXT,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != Erlang::Type::SMALL_INTEGER_EXT &&
-            $type != Erlang::Type::INTEGER_EXT )
+        if($type != pErlang::Type::NEW_FLOAT_EXT &&
+            $type != pErlang::Type::FLOAT_EXT)
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }

@@ -1,4 +1,4 @@
-package Erlang::Type;
+package pErlang::Type;
 use Exporter qw(import);
 
 our @EXPORT_OK = qw(

@@ -1,15 +1,15 @@
-package Erlang::MessageHandler;
+package pErlang::MessageHandler;
 use Try::Tiny;
 
-use Erlang::Type qw(:all);
-use Erlang::Atom;
+use pErlang::Type qw(:all);
+use pErlang::Atom;
 
 
 sub start {
     while(1) {
         my $msg = decode_message();
-        if($msg->isa('Erlang::Atom') && $msg eq 'ex_perl_shutdown') {
-            my $reply = Erlang::Atom->new(name => 'ok_lets_do_it')->encode();
+        if($msg->isa('pErlang::Atom') && $msg eq 'ex_perl_shutdown') {
+            my $reply = pErlang::Atom->new(name => 'ok_lets_do_it')->encode();
             $reply = "\x83".$reply;
             print STDOUT $reply;
             msg("goodybe");
@@ -46,7 +46,7 @@ sub decode_term {
         $len = unpack("n", $len);
         my $atom_name;
         sysread(STDIN, $atom_name, $len);
-        return Erlang::Atom->new(
+        return pErlang::Atom->new(
             name => $atom_name,
             is_utf8 => 0,
         );

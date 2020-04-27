@@ -1,7 +1,7 @@
-package Erlang::String;
+package pErlang::String;
 use Mouse;
 
-extends 'Erlang::Datastructure';
+extends 'pErlang::Datastructure';
 
 use overload 
     '""' => \&to_string,
@@ -41,7 +41,7 @@ sub string_not_equal {
 
 sub equals {
     my ($self, $other) = @_;
-    if (UNIVERSAL::isa($other, 'Erlang::String') && $other->data() eq $self->data()) {
+    if (UNIVERSAL::isa($other, 'pErlang::String') && $other->data() eq $self->data()) {
         return 1;
     } else {
         return 0;

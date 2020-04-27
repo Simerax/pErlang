@@ -1,9 +1,9 @@
-package Erlang::List;
+package pErlang::List;
 use Mouse;
 
-extends 'Erlang::Datastructure';
+extends 'pErlang::Datastructure';
 
-use Erlang::Nil;
+use pErlang::Nil;
 
 has elements => (
     is => 'rw',
@@ -13,7 +13,7 @@ has elements => (
 
 has tail => (
     is => 'rw',
-    default => sub {Erlang::Nil->new()},
+    default => sub {pErlang::Nil->new()},
 );
 
 sub length {

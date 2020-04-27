@@ -1,26 +1,26 @@
 use Test::More tests => 52;
-use Erlang::Type;
+use pErlang::Type;
 
 use utf8;
 
-require_ok('Erlang::Decode');
+require_ok('pErlang::Decode');
 
 # Sysread can't handle in memory streams so we use perl's 'read' for the tests
 # https://github.com/Perl/perl5/issues/10125
-$Erlang::Decode::USE_PERL_READ_FUNCTION = 1; 
+$pErlang::Decode::USE_PERL_READ_FUNCTION = 1; 
 
 
 {
     my $TEST_NAME = 'Decode uncompressed ATOM_EXT message';
 
-    # Erlang External Term Format Message uncompressed ATOM_EXT with value "shutdown"
+    # pErlang External Term Format Message uncompressed ATOM_EXT with value "shutdown"
     my $message = "\x83\x64\x00\x08\x73\x68\x75\x74\x64\x6F\x77\x6E";
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Atom');
+    isa_ok($decoded, 'pErlang::Atom');
     ok($decoded->name() eq 'shutdown', $TEST_NAME);
 }
 {
@@ -31,11 +31,11 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Atom');
+    isa_ok($decoded, 'pErlang::Atom');
     print "--> ".$decoded->subtype()."\n";
-    ok($decoded->subtype() == Erlang::Type::SMALL_ATOM_UTF8_EXT);
+    ok($decoded->subtype() == pErlang::Type::SMALL_ATOM_UTF8_EXT);
 
     my $expected = 'мои';
     utf8::encode($expected);
@@ -49,9 +49,9 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Binary');
+    isa_ok($decoded, 'pErlang::Binary');
     ok($decoded->data() eq 'hello', $TEST_NAME);
 }
 
@@ -61,10 +61,10 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Integer');
-    ok($decoded->subtype() == Erlang::Type::SMALL_INTEGER_EXT);
+    isa_ok($decoded, 'pErlang::Integer');
+    ok($decoded->subtype() == pErlang::Type::SMALL_INTEGER_EXT);
     ok($decoded->value() == 149, $TEST_NAME);
 }
 
@@ -74,10 +74,10 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Integer');
-    ok($decoded->subtype() == Erlang::Type::INTEGER_EXT);
+    isa_ok($decoded, 'pErlang::Integer');
+    ok($decoded->subtype() == pErlang::Type::INTEGER_EXT);
     ok($decoded->value() == 42235644, $TEST_NAME);
 }
 
@@ -87,10 +87,10 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Integer');
-    ok($decoded->subtype() == Erlang::Type::INTEGER_EXT);
+    isa_ok($decoded, 'pErlang::Integer');
+    ok($decoded->subtype() == pErlang::Type::INTEGER_EXT);
     ok($decoded->value() == -293847, $TEST_NAME);
 }
 
@@ -100,13 +100,13 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Tuple');
-    ok($decoded->subtype() == Erlang::Type::SMALL_TUPLE_EXT);
+    isa_ok($decoded, 'pErlang::Tuple');
+    ok($decoded->subtype() == pErlang::Type::SMALL_TUPLE_EXT);
     ok($decoded->arity() == 2);
-    ok($decoded->at(0)->isa('Erlang::Atom'));
-    ok($decoded->at(1)->isa('Erlang::Integer'), $TEST_NAME);
+    ok($decoded->at(0)->isa('pErlang::Atom'));
+    ok($decoded->at(1)->isa('pErlang::Integer'), $TEST_NAME);
 }
 
 {
@@ -116,10 +116,10 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Tuple');
-    ok($decoded->subtype() == Erlang::Type::LARGE_TUPLE_EXT);
+    isa_ok($decoded, 'pErlang::Tuple');
+    ok($decoded->subtype() == pErlang::Type::LARGE_TUPLE_EXT);
     ok($decoded->arity() == 280, $TEST_NAME);
 }
 
@@ -129,10 +129,10 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Float');
-    ok($decoded->subtype() == Erlang::Type::NEW_FLOAT_EXT);
+    isa_ok($decoded, 'pErlang::Float');
+    ok($decoded->subtype() == pErlang::Type::NEW_FLOAT_EXT);
     ok($decoded->value() == 2.3, $TEST_NAME);
 }
 
@@ -144,13 +144,13 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::List');
+    isa_ok($decoded, 'pErlang::List');
     ok($decoded->length() == 2);
     ok($decoded->at(0) eq "hello");
     ok($decoded->at(1) eq "bye");
-    ok($decoded->tail()->isa('Erlang::Nil'), $TEST_NAME);
+    ok($decoded->tail()->isa('pErlang::Nil'), $TEST_NAME);
 }
 
 {
@@ -159,9 +159,9 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $decoded) = Erlang::Decode::decode($stream);
+    my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($decoded, 'Erlang::Nil', $TEST_NAME);
+    isa_ok($decoded, 'pErlang::Nil', $TEST_NAME);
 }
 
 {
@@ -172,14 +172,14 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $map) = Erlang::Decode::decode($stream);
+    my ($ok, $map) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($map, 'Erlang::Map');
+    isa_ok($map, 'pErlang::Map');
 
-    my $a = $map->get(Erlang::Atom->new(name => 'a'));
-    isa_ok($a, 'Erlang::Integer');
-    my $b = $map->get(Erlang::Atom->new(name => 'b'));
-    isa_ok($b, 'Erlang::Binary');
+    my $a = $map->get(pErlang::Atom->new(name => 'a'));
+    isa_ok($a, 'pErlang::Integer');
+    my $b = $map->get(pErlang::Atom->new(name => 'b'));
+    isa_ok($b, 'pErlang::Binary');
 
     
 }
@@ -191,9 +191,9 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
 
     my $stream;
     open($stream, '<', \$message);
-    my ($ok, $string) = Erlang::Decode::decode($stream);
+    my ($ok, $string) = pErlang::Decode::decode($stream);
     ok($ok == 1);
-    isa_ok($string, 'Erlang::String');
+    isa_ok($string, 'pErlang::String');
     ok($string eq 'abc');
 }
 

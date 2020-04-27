@@ -1,8 +1,8 @@
-package Erlang::Atom;
+package pErlang::Atom;
 use Mouse;
-use Erlang::Type;
+use pErlang::Type;
 
-extends 'Erlang::Datastructure';
+extends 'pErlang::Datastructure';
 
 use overload
     'eq' => \&equals,
@@ -18,12 +18,12 @@ has name => (
 has subtype => (
     is => 'rw',
     isa => 'Num',
-    default => Erlang::Type::ATOM_UTF8_EXT,
+    default => pErlang::Type::ATOM_UTF8_EXT,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != Erlang::Type::ATOM_EXT &&
-            $type != Erlang::Type::ATOM_UTF8_EXT &&
-            $type != Erlang::Type::SMALL_ATOM_UTF8_EXT)
+        if($type != pErlang::Type::ATOM_EXT &&
+            $type != pErlang::Type::ATOM_UTF8_EXT &&
+            $type != pErlang::Type::SMALL_ATOM_UTF8_EXT)
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }
@@ -38,7 +38,7 @@ has is_utf8 => (
 
 sub equals {
     my ($self, $other) = @_;
-    if(UNIVERSAL::isa($other, 'Erlang::Atom')) {
+    if(UNIVERSAL::isa($other, 'pErlang::Atom')) {
         return $self->name() eq $other->name();
     } else {
         return $self->name() eq $other;
@@ -50,9 +50,9 @@ sub encode {
     my $len = length($self->name());
     my $type;
     if($self->is_utf8()) {
-        $type = chr(Erlang::Type::ATOM_UTF8_EXT);
+        $type = chr(pErlang::Type::ATOM_UTF8_EXT);
     } else {
-        $type = chr(Erlang::Type::ATOM_EXT);
+        $type = chr(pErlang::Type::ATOM_EXT);
     }
 
     return $type.pack("n",$len).$self->name();
