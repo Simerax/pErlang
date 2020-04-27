@@ -1,4 +1,4 @@
-use Test::More tests => 49;
+use Test::More tests => 52;
 use Erlang::Type;
 
 use utf8;
@@ -182,5 +182,18 @@ $Erlang::Decode::USE_PERL_READ_FUNCTION = 1;
     isa_ok($b, 'Erlang::Binary');
 
     
+}
+
+{
+    my $TEST_NAME = 'Decode uncompressed String/Charlist message';
+    # charlist 'abc' -> [97, 98, 99]
+    my $message = "\x83\x6B\x00\x03\x61\x62\x63";
+
+    my $stream;
+    open($stream, '<', \$message);
+    my ($ok, $string) = Erlang::Decode::decode($stream);
+    ok($ok == 1);
+    isa_ok($string, 'Erlang::String');
+    ok($string eq 'abc');
 }
 
