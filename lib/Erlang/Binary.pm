@@ -1,27 +1,14 @@
 package Erlang::Binary;
 use Mouse;
 
-extends 'Erlang::Datastructure';
-
-use overload
-    'eq' => \&equals;
-
-has data => (
-    is => 'rw',
-    isa => 'Str',
-    default => '',
-);
-
-sub length {
-    return length($_[0]->data());
-}
+extends 'Erlang::String';
 
 sub equals {
     my ($self, $other) = @_;
-    if(UNIVERSAL::isa($other, 'Erlang::Binary')) {
-        return $self->data() eq $other->data();
+    if (UNIVERSAL::isa($other, 'Erlang::Binary') && $other->data() eq $self->data()) {
+        return 1;
     } else {
-        return $self->data() eq $other;
+        return 0;
     }
 }
 
