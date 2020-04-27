@@ -1,4 +1,4 @@
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 require_ok('pErlang::Binary');
 
@@ -11,4 +11,8 @@ require_ok('pErlang::Binary');
     ok($binary != pErlang::Binary->new(data => 'bye'));
     ok($binary == pErlang::Binary->new(data => 'hello'));
     ok("$binary" eq "hello");
+
+    my $encoded = $binary->encode();
+    my $expected = "\x6D\x00\x00\x00\x05\x68\x65\x6C\x6C\x6F";
+    ok($encoded eq $expected, "Binary can be encoded");
 }

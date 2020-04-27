@@ -1,5 +1,6 @@
 package pErlang::Binary;
 use Mouse;
+use pErlang::Type;
 
 extends 'pErlang::String';
 
@@ -10,6 +11,11 @@ sub equals {
     } else {
         return 0;
     }
+}
+
+sub encode {
+    my ($self) = @_;
+    return chr(pErlang::Type::BINARY_EXT).pack("N", $self->length()).$self->data();
 }
 
 1;
