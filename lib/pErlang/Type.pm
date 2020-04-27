@@ -25,55 +25,55 @@ our %EXPORT_TAGS = (all => [@EXPORT_OK]);
 
 
 use constant {
-    NIL_EXT => 106,
+    NIL_EXT => chr(106),
 
-    ATOM_EXT => 100,
-    SMALL_ATOM_UTF8_EXT => 119,
-    ATOM_UTF8_EXT => 118,
+    ATOM_EXT => chr(100),
+    SMALL_ATOM_UTF8_EXT => chr(119),
+    ATOM_UTF8_EXT => chr(118),
 
-    SMALL_INTEGER_EXT => 97,
-    INTEGER_EXT => 98,
+    SMALL_INTEGER_EXT => chr(97),
+    INTEGER_EXT => chr(98),
 
-    FLOAT_EXT => 99, # old Float - used in external format minor version 0
-    NEW_FLOAT_EXT => 70,
+    FLOAT_EXT => chr(99), # old Float - used in external format minor version 0
+    NEW_FLOAT_EXT => chr(70),
 
-    SMALL_TUPLE_EXT => 104,
-    LARGE_TUPLE_EXT => 105,
+    SMALL_TUPLE_EXT => chr(104),
+    LARGE_TUPLE_EXT => chr(105),
 
-    MAP_EXT => 116,
+    MAP_EXT => chr(116),
 
-    STRING_EXT => 107, # actually charlists with values 0-255 sent as bytearray
-    LIST_EXT => 108,
-    BINARY_EXT => 109,
+    STRING_EXT => chr(107), # actually charlists with values 0-255 sent as bytearray
+    LIST_EXT => chr(108),
+    BINARY_EXT => chr(109),
 };
 
 sub is_nil {
-    return ord($_[0]) == NIL_EXT;
+    return $_[0] eq NIL_EXT;
 }
 
 sub is_binary {
-    return ord($_[0]) == BINARY_EXT;
+    return $_[0] eq BINARY_EXT;
 }
 
 sub is_string {
-    return ord($_[0]) == STRING_EXT;
+    return $_[0] eq STRING_EXT;
 }
 
 sub is_list {
-    return ord($_[0]) == LIST_EXT;
+    return $_[0] eq LIST_EXT;
 }
 
 
 sub is_map {
-    return ord($_[0]) == MAP_EXT;
+    return $_[0] eq MAP_EXT;
 }
 
 sub is_small_tuple {
-    return ord($_[0]) == SMALL_TUPLE_EXT;
+    return $_[0] eq SMALL_TUPLE_EXT;
 }
 
 sub is_large_tuple {
-    return ord($_[0]) == LARGE_TUPLE_EXT;
+    return $_[0] eq LARGE_TUPLE_EXT;
 }
 
 sub is_tuple {
@@ -81,11 +81,11 @@ sub is_tuple {
 }
 
 sub is_8bit_integer {
-    return ord($_[0]) == SMALL_INTEGER_EXT;
+    return $_[0] eq SMALL_INTEGER_EXT;
 }
 
 sub is_32bit_integer {
-    return ord($_[0]) == INTEGER_EXT;
+    return $_[0] eq INTEGER_EXT;
 }
 
 sub is_float {
@@ -93,22 +93,22 @@ sub is_float {
 }
 
 sub is_new_float {
-    return ord($_[0]) == NEW_FLOAT_EXT;
+    return $_[0] eq NEW_FLOAT_EXT;
 }
 
 sub is_old_float {
-    return ord($_[0]) == FLOAT_EXT;
+    return $_[0] eq FLOAT_EXT;
 }
 
 sub is_atom {
     return is_atom_ext($_[0]) || is_atom_utf8($_[0]) || is_atom_utf8_small($_[0]);
 }
 sub is_atom_ext {
-    return ord($_[0]) == ATOM_EXT;
+    return $_[0] eq ATOM_EXT;
 }
 sub is_atom_utf8 {
-    return ord($_[0]) == ATOM_UTF8_EXT;
+    return $_[0] eq ATOM_UTF8_EXT;
 }
 sub is_atom_utf8_small {
-    return ord($_[0]) == SMALL_ATOM_UTF8_EXT;
+    return $_[0] eq SMALL_ATOM_UTF8_EXT;
 }

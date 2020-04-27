@@ -11,12 +11,12 @@ has value => (
 
 has subtype => (
     is => 'rw',
-    isa => 'Num',
+    isa => 'Str',
     required => 1,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != pErlang::Type::SMALL_INTEGER_EXT &&
-            $type != pErlang::Type::INTEGER_EXT )
+        if($type ne pErlang::Type::SMALL_INTEGER_EXT &&
+            $type ne pErlang::Type::INTEGER_EXT )
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }

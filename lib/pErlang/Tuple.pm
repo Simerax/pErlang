@@ -15,12 +15,12 @@ has elements => (
 
 has subtype => (
     is => 'rw',
-    isa => 'Num',
+    isa => 'Str',
     required => 1,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != pErlang::Type::SMALL_TUPLE_EXT &&
-            $type != pErlang::Type::LARGE_TUPLE_EXT )
+        if($type ne pErlang::Type::SMALL_TUPLE_EXT &&
+            $type ne pErlang::Type::LARGE_TUPLE_EXT )
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }

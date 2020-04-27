@@ -17,13 +17,13 @@ has name => (
 
 has subtype => (
     is => 'rw',
-    isa => 'Num',
+    isa => 'Str',
     default => pErlang::Type::ATOM_UTF8_EXT,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != pErlang::Type::ATOM_EXT &&
-            $type != pErlang::Type::ATOM_UTF8_EXT &&
-            $type != pErlang::Type::SMALL_ATOM_UTF8_EXT)
+        if($type ne pErlang::Type::ATOM_EXT &&
+            $type ne pErlang::Type::ATOM_UTF8_EXT &&
+            $type ne pErlang::Type::SMALL_ATOM_UTF8_EXT)
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }
@@ -45,14 +45,14 @@ sub encode {
     my $len = length($self->name());
 
     my $encoded;
-    if($self->subtype() == pErlang::Type::ATOM_EXT || $self->subtype() == pErlang::Type::ATOM_UTF8_EXT) {
-        $encoded = chr($self->subtype()) . pack('n', $len);
+    if($self->subtype() eq pErlang::Type::ATOM_EXT || $self->subtype() eq pErlang::Type::ATOM_UTF8_EXT) {
+        $encoded = $self->subtype() . pack('n', $len);
     }
-    if($self->subtype() == pErlang::Type::SMALL_ATOM_UTF8_EXT) {
+    if($self->subtype() eq pErlang::Type::SMALL_ATOM_UTF8_EXT) {
         if($len <= 255) {
-            $encoded = chr($self->subtype()) . pack('C', $len);
+            $encoded = $self->subtype() . pack('C', $len);
         } else {
-            $encoded = chr(pErlang::Type::ATOM_UTF8_EXT) . pack('n', $len);
+            $encoded = pErlang::Type::ATOM_UTF8_EXT . pack('n', $len);
         }
     }
 

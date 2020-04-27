@@ -11,12 +11,12 @@ has value => (
 
 has subtype => (
     is => 'rw',
-    isa => 'Num',
+    isa => 'Str',
     default => pErlang::Type::NEW_FLOAT_EXT,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type != pErlang::Type::NEW_FLOAT_EXT &&
-            $type != pErlang::Type::FLOAT_EXT)
+        if($type ne pErlang::Type::NEW_FLOAT_EXT &&
+            $type ne pErlang::Type::FLOAT_EXT)
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }

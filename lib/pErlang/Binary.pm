@@ -15,7 +15,7 @@ sub equals {
 
 sub encode {
     my ($self) = @_;
-    return chr(pErlang::Type::BINARY_EXT).pack("N", $self->length()).$self->data();
+    return pErlang::Type::BINARY_EXT.pack("N", $self->length()).$self->data();
 }
 
 1;
