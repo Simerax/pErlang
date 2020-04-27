@@ -30,11 +30,6 @@ has subtype => (
     },
 );
 
-has is_utf8 => (
-    is => 'rw',
-    isa => 'Bool',
-    default => 0,
-);
 
 sub equals {
     my ($self, $other) = @_;
@@ -48,14 +43,20 @@ sub equals {
 sub encode {
     my ($self) = @_;
     my $len = length($self->name());
-    my $type;
-    if($self->is_utf8()) {
-        $type = chr(pErlang::Type::ATOM_UTF8_EXT);
-    } else {
-        $type = chr(pErlang::Type::ATOM_EXT);
+
+    my $encoded;
+    if($self->subtype() == pErlang::Type::ATOM_EXT || $self->subtype() == pErlang::Type::ATOM_UTF8_EXT) {
+        $encoded = chr($self->subtype()) . pack('n', $len);
+    }
+    if($self->subtype() == pErlang::Type::SMALL_ATOM_UTF8_EXT) {
+        if($len <= 255) {
+            $encoded = chr($self->subtype()) . pack('C', $len);
+        } else {
+            $encoded = chr(pErlang::Type::ATOM_UTF8_EXT) . pack('n', $len);
+        }
     }
 
-    return $type.pack("n",$len).$self->name();
+    return $encoded . $self->name();
 }
 
 sub to_string {

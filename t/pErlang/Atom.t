@@ -1,4 +1,4 @@
-use Test::More tests => 6;
+use Test::More tests => 7;
 use pErlang::Type;
 
 require_ok('pErlang::Atom');
@@ -12,8 +12,18 @@ require_ok('pErlang::Atom');
     ok($atom->subtype() == pErlang::Type::ATOM_EXT, "Atom Subtype is set by constructor");
     
     my $encoded = $atom->encode();
-    my $expected = chr(pErlang::Type::ATOM_EXT).pack("n", 2).$atom->name();
+    my $expected = "\x64\x00\x02\x6F\x6B";
     ok($encoded eq $expected, "Atom can be encoded");
 }
 
-# TODO: Add tests for UTF8 atoms
+{
+    use utf8;
+    my $str = 'также';
+    utf8::encode($str);
+    my $atom = pErlang::Atom->new(name => $str, subtype => pErlang::Type::SMALL_ATOM_UTF8_EXT);
+    
+    my $encoded = $atom->encode();
+    my $expected = "\x77\x0A\xD1\x82\xD0\xB0\xD0\xBA\xD0\xB6\xD0\xB5";
+    ok($encoded eq $expected, "Atom can be encoded");
+    no utf8;
+}
