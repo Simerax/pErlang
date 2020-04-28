@@ -1,4 +1,4 @@
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -23,4 +23,25 @@ use pErlang::Type qw(:constants);
     $encoder->visit($int);
     my $result = $encoder->result();
     ok($result eq "\x62\x00\x00\x7E\xA4", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode an ATOM_EXT';
+    use pErlang::Atom;
+    my $atom = pErlang::Atom->new(name => 'hello', subtype => ATOM_EXT);
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($atom);
+    my $result = $encoder->result();
+    ok($result eq "\x64\x00\x05\x68\x65\x6C\x6C\x6F", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a SMALL_ATOM_UTF8_EXT';
+    use pErlang::Atom;
+    use utf8;
+    my $atom = pErlang::Atom->new(name => 'хорошо', subtype => SMALL_ATOM_UTF8_EXT);
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($atom);
+    my $result = $encoder->result();
+    ok($result eq "\x77\x0C\xD1\x85\xD0\xBE\xD1\x80\xD0\xBE\xD1\x88\xD0\xBE", $TEST_NAME);
 }
