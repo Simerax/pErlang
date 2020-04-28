@@ -1,5 +1,6 @@
 package pErlang::Integer;
 use Mouse;
+use pErlang::Type qw(:constants);
 
 extends 'pErlang::Datastructure';
 
@@ -15,8 +16,8 @@ has subtype => (
     required => 1,
     trigger => sub {
         my ($self, $type) = @_;
-        if($type ne pErlang::Type::SMALL_INTEGER_EXT &&
-            $type ne pErlang::Type::INTEGER_EXT )
+        if($type ne SMALL_INTEGER_EXT &&
+            $type ne INTEGER_EXT )
         {
             confess("Invalid subtype '$type' for ".__PACKAGE__);
         }
