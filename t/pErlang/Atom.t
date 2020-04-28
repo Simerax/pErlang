@@ -9,7 +9,7 @@ require_ok('pErlang::Atom');
     isa_ok($atom, 'pErlang::Atom');
     ok($atom->name() eq 'ok', "Atom Name being set by constructor");
     ok("$atom" eq 'ok', "Atom Stringify");
-    ok($atom->subtype() == pErlang::Type::ATOM_EXT, "Atom Subtype is set by constructor");
+    ok($atom->subtype() eq pErlang::Type::ATOM_EXT, "Atom Subtype is set by constructor");
     
     my $encoded = $atom->encode();
     my $expected = "\x64\x00\x02\x6F\x6B";

@@ -35,7 +35,7 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Atom');
     print "--> ".$decoded->subtype()."\n";
-    ok($decoded->subtype() == pErlang::Type::SMALL_ATOM_UTF8_EXT);
+    ok($decoded->subtype() eq pErlang::Type::SMALL_ATOM_UTF8_EXT);
 
     my $expected = 'мои';
     utf8::encode($expected);
@@ -64,7 +64,7 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Integer');
-    ok($decoded->subtype() == pErlang::Type::SMALL_INTEGER_EXT);
+    ok($decoded->subtype() eq pErlang::Type::SMALL_INTEGER_EXT);
     ok($decoded->value() == 149, $TEST_NAME);
 }
 
@@ -77,7 +77,7 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Integer');
-    ok($decoded->subtype() == pErlang::Type::INTEGER_EXT);
+    ok($decoded->subtype() eq pErlang::Type::INTEGER_EXT);
     ok($decoded->value() == 42235644, $TEST_NAME);
 }
 
@@ -90,20 +90,20 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Integer');
-    ok($decoded->subtype() == pErlang::Type::INTEGER_EXT);
+    ok($decoded->subtype() eq pErlang::Type::INTEGER_EXT);
     ok($decoded->value() == -293847, $TEST_NAME);
 }
 
 {
     my $TEST_NAME = 'Decode uncompressed tuple with atom and small integer';
-    my $message = "\x83\x68\x02\x64\x0\x02\x6F\x6B\x61\x19"; # tuple {ok, 25}
+    my $message = "\x83\x68\x02\x64\x00\x02\x6F\x6B\x61\x19"; # tuple {ok, 25}
 
     my $stream;
     open($stream, '<', \$message);
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Tuple');
-    ok($decoded->subtype() == pErlang::Type::SMALL_TUPLE_EXT);
+    ok($decoded->subtype() eq pErlang::Type::SMALL_TUPLE_EXT);
     ok($decoded->arity() == 2);
     ok($decoded->at(0)->isa('pErlang::Atom'));
     ok($decoded->at(1)->isa('pErlang::Integer'), $TEST_NAME);
@@ -119,7 +119,7 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Tuple');
-    ok($decoded->subtype() == pErlang::Type::LARGE_TUPLE_EXT);
+    ok($decoded->subtype() eq pErlang::Type::LARGE_TUPLE_EXT);
     ok($decoded->arity() == 280, $TEST_NAME);
 }
 
@@ -132,7 +132,7 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Float');
-    ok($decoded->subtype() == pErlang::Type::NEW_FLOAT_EXT);
+    ok($decoded->subtype() eq pErlang::Type::NEW_FLOAT_EXT);
     ok($decoded->value() == 2.3, $TEST_NAME);
 }
 

@@ -1,4 +1,6 @@
 package pErlang::Decode;
+use warnings;
+use strict;
 use pErlang::Type qw(:all);
 use pErlang::Atom;
 use pErlang::Binary;
@@ -39,7 +41,7 @@ sub decode_term {
         my $type;
 
         if(defined $next_item_type) {
-            $type = $nextitem_type;
+            $type = $next_item_type;
         } else {
             my $read = sread($s, \$type, 1);
             if ($read <= 0) {
@@ -73,20 +75,20 @@ sub decode_term {
             my $int;
             sread($s, \$int, 1);
             $int = unpack('C', $int);
-            my $int = pErlang::Integer->new(
+            my $pint = pErlang::Integer->new(
                 value => $int,
                 subtype => pErlang::Type::SMALL_INTEGER_EXT,
             );
-            return ret(1, $int);
+            return ret(1, $pint);
         } elsif(is_32bit_integer($type)) {
             my $int;
             sread($s, \$int, 4);
             $int = unpack('N!', $int);
-            my $int = pErlang::Integer->new(
+            my $pint = pErlang::Integer->new(
                 value => $int,
                 subtype => pErlang::Type::INTEGER_EXT,
             );
-            return ret(1, $int);
+            return ret(1, $pint);
         } elsif(is_float($type)) {
             my $value;
             if (is_new_float($type)) {
