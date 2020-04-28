@@ -19,8 +19,40 @@ our @EXPORT_OK = qw(
     is_atom_utf8_small
     is_atom_ext
     is_nil
+    NIL_EXT
+    ATOM_EXT
+    SMALL_ATOM_UTF8_EXT
+    ATOM_UTF8_EXT
+    SMALL_INTEGER_EXT
+    INTEGER_EXT
+    FLOAT_EXT
+    NEW_FLOAT_EXT
+    SMALL_TUPLE_EXT
+    LARGE_TUPLE_EXT
+    MAP_EXT
+    STRING_EXT
+    LIST_EXT
+    BINARY_EXT
 );
-our %EXPORT_TAGS = (all => [@EXPORT_OK]);
+our %EXPORT_TAGS = (
+    all => [@EXPORT_OK],
+    constants => [
+        'NIL_EXT',
+        'ATOM_EXT',
+        'SMALL_ATOM_UTF8_EXT',
+        'ATOM_UTF8_EXT',
+        'SMALL_INTEGER_EXT',
+        'INTEGER_EXT',
+        'FLOAT_EXT',
+        'NEW_FLOAT_EXT',
+        'SMALL_TUPLE_EXT',
+        'LARGE_TUPLE_EXT',
+        'MAP_EXT',
+        'STRING_EXT',
+        'LIST_EXT',
+        'BINARY_EXT'
+    ],
+);
 
 
 
