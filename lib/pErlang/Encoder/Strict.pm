@@ -35,10 +35,6 @@ sub visit_pErlang_Atom {
         $format = 'C';
     }
 
-    if($atom->subtype() eq ATOM_UTF8_EXT || $atom->subtype() eq SMALL_ATOM_UTF8_EXT) {
-        utf8::encode($atom_str);
-    }
-
     my $encoded = $atom->subtype().pack($format, length($atom_str)).$atom_str;
     $self->data($self->data() . $encoded);
 }
