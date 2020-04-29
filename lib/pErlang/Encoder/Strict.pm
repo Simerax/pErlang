@@ -75,6 +75,11 @@ sub visit_pErlang_Tuple {
     $self->visit($_) foreach(@{$tuple->elements()});
 }
 
+sub visit_pErlang_String {
+    my($self, $string) = @_;
+    $self->data($self->data() . STRING_EXT . pack("n", $string->length()) . $string->data());
+}
+
 sub result {
     my($self) = @_;
     return $self->data();

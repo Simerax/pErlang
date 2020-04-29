@@ -1,4 +1,4 @@
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -10,6 +10,7 @@ use pErlang::Nil;
 use pErlang::Binary;
 use pErlang::Float;
 use pErlang::Tuple;
+use pErlang::String;
 
 
 {
@@ -107,4 +108,14 @@ use pErlang::Tuple;
     $encoder->visit($tuple);
     my $result = $encoder->result();
     ok($result eq "\x68\x03\x64\x00\x02\x6F\x6B\x46\x40\x0C\x00\x00\x00\x00\x00\x00\x46\x40\xA2\x50\x00\x00\x00\x00\x00", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a String/Charlist';
+
+    my $string = pErlang::String->new(data => "oijl");
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($string);
+    my $result = $encoder->result();
+    ok($result eq "\x6B\x00\x04\x6F\x69\x6A\x6C", $TEST_NAME);
 }
