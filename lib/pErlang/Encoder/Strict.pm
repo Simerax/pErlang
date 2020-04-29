@@ -39,6 +39,11 @@ sub visit_pErlang_Atom {
     $self->data($self->data() . $encoded);
 }
 
+sub visit_pErlang_Nil {
+    my ($self, $nil) = @_;
+    $self->data($self->data() . "\x6A");
+}
+
 sub result {
     my($self) = @_;
     return $self->data();

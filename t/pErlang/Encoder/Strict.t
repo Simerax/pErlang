@@ -1,4 +1,4 @@
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -46,4 +46,15 @@ use pErlang::Type qw(:constants);
     $encoder->visit($atom);
     my $result = $encoder->result();
     ok($result eq "\x77\x0C\xD1\x85\xD0\xBE\xD1\x80\xD0\xBE\xD1\x88\xD0\xBE", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a NIL';
+    use pErlang::Nil;
+
+    my $nil = pErlang::Nil->new();
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($nil);
+    my $result = $encoder->result();
+    ok($result eq "\x6A", $TEST_NAME);
 }
