@@ -33,6 +33,7 @@ our @EXPORT_OK = qw(
     STRING_EXT
     LIST_EXT
     BINARY_EXT
+    VERSION_PREFIX
 );
 our %EXPORT_TAGS = (
     all => [@EXPORT_OK],
@@ -50,7 +51,8 @@ our %EXPORT_TAGS = (
         'MAP_EXT',
         'STRING_EXT',
         'LIST_EXT',
-        'BINARY_EXT'
+        'BINARY_EXT',
+        'VERSION_PREFIX'
     ],
 );
 
@@ -77,6 +79,8 @@ use constant {
     STRING_EXT => chr(107), # actually charlists with values 0-255 sent as bytearray
     LIST_EXT => chr(108),
     BINARY_EXT => chr(109),
+
+    VERSION_PREFIX => chr(131),
 };
 
 sub is_nil {
