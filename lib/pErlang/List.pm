@@ -24,4 +24,9 @@ sub at {
     return $_[0]->elements()->[$_[1]];
 }
 
+sub push {
+    my ($self, $element) = @_;
+    push @{$self->elements()}, $element;
+}
+
 1;

@@ -49,6 +49,14 @@ sub visit_pErlang_Binary {
     $self->data( $self->data() . BINARY_EXT . pack("N", length($binary->data())).$binary->data());
 }
 
+sub visit_pErlang_List {
+    my($self, $list) = @_;
+
+    $self->data($self->data() . LIST_EXT . pack("N", $list->length()));
+    $self->visit($_) foreach(@{$list->elements()});
+    $self->visit($list->tail());
+}
+
 sub result {
     my($self) = @_;
     return $self->data();
