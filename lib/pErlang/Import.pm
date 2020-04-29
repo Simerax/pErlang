@@ -1,4 +1,4 @@
-package pErlang;
+package pErlang::Import;
 
 use pErlang::Type qw(:constants);
 use pErlang::Atom;
@@ -9,6 +9,8 @@ use pErlang::String;
 use pErlang::Map;
 use pErlang::List;
 use pErlang::Tuple;
+use pErlang::Encode;
+use pErlang::Decode;
 
 use Exporter qw(import);
 
@@ -23,12 +25,33 @@ our @EXPORT_OK = qw(
     List
     Tuple
     String
+    encode
+    decode
 );
 
 our %EXPORT_TAGS = (
-    all => [@EXPORT_OK]
+    all => [@EXPORT_OK],
+    types => qw(
+        AtomUTF8
+        Atom
+        Float
+        Integer
+        Integer8bit
+        Binary
+        Map
+        List
+        Tuple
+        String
+    ),
 );
 
+sub encode {
+    return pErlang::Encode::encode(@_);
+}
+
+sub decode {
+    return pErlang::Decode::decode(@_);
+}
 
 sub AtomUTF8 {
     my ($name) = @_;
