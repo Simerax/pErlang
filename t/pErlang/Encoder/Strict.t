@@ -70,7 +70,7 @@ use pErlang::Type qw(:constants);
 }
 
 {
-    my $TEST_NAME = 'Encode a Binary';
+    my $TEST_NAME = 'Encode a List';
     use pErlang::List;
 
     my $list = pErlang::List->new();
