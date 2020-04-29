@@ -41,7 +41,12 @@ sub visit_pErlang_Atom {
 
 sub visit_pErlang_Nil {
     my ($self, $nil) = @_;
-    $self->data($self->data() . "\x6A");
+    $self->data($self->data() . NIL_EXT);
+}
+
+sub visit_pErlang_Binary {
+    my ($self, $binary) = @_;
+    $self->data( $self->data() . BINARY_EXT . pack("N", length($binary->data())).$binary->data());
 }
 
 sub result {

@@ -1,4 +1,4 @@
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -57,4 +57,14 @@ use pErlang::Type qw(:constants);
     $encoder->visit($nil);
     my $result = $encoder->result();
     ok($result eq "\x6A", $TEST_NAME);
+}
+{
+    my $TEST_NAME = 'Encode a Binary';
+    use pErlang::Binary;
+
+    my $binary = pErlang::Binary->new(data => 'test');
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($binary);
+    my $result = $encoder->result();
+    ok($result eq "\x6D\x00\x00\x00\x04\x74\x65\x73\x74", $TEST_NAME);
 }
