@@ -181,7 +181,8 @@ sub decode_term {
             for(my $i = 0; $i <= $arity; $i += 2) {
                 my ($ok, $key) = decode_term($s);
                 return ret(0, $key) unless $ok;
-                my ($ok, $value) = decode_term($s);
+                my $value;
+                ($ok, $value) = decode_term($s);
                 return ret(0, $value) unless $ok;
                 $map->put($key, $value);
             }
