@@ -34,7 +34,6 @@ $pErlang::Decode::USE_PERL_READ_FUNCTION = 1;
     my ($ok, $decoded) = pErlang::Decode::decode($stream);
     ok($ok == 1);
     isa_ok($decoded, 'pErlang::Atom');
-    print "--> ".$decoded->subtype()."\n";
     ok($decoded->subtype() eq pErlang::Type::SMALL_ATOM_UTF8_EXT);
 
     my $expected = 'мои';

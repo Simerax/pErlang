@@ -75,7 +75,6 @@ sub Integer8bit {
 
 sub Integer {
     my ($num) = @_;
-    print "----------> $num\n";
     return pErlang::Integer->new(value => $num, subtype => INTEGER_EXT);
 }
 
