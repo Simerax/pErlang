@@ -1,13 +1,18 @@
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 require_ok('pErlang::Encoder::Strict');
 
 use pErlang::Type qw(:constants);
+use pErlang::List;
+use pErlang::Integer;
+use pErlang::Atom;
+use pErlang::Nil;
+use pErlang::Binary;
+use pErlang::Float;
 
 
 {
     my $TEST_NAME = 'Encode a small (8bit) integer';
-    use pErlang::Integer;
     my $int = pErlang::Integer->new(value => 23, subtype => SMALL_INTEGER_EXT);
     my $encoder = pErlang::Encoder::Strict->new();
     $encoder->visit($int);
@@ -17,7 +22,6 @@ use pErlang::Type qw(:constants);
 
 {
     my $TEST_NAME = 'Encode a large (32bit) integer';
-    use pErlang::Integer;
     my $int = pErlang::Integer->new(value => 32420, subtype => INTEGER_EXT);
     my $encoder = pErlang::Encoder::Strict->new();
     $encoder->visit($int);
@@ -27,7 +31,6 @@ use pErlang::Type qw(:constants);
 
 {
     my $TEST_NAME = 'Encode an ATOM_EXT';
-    use pErlang::Atom;
     my $atom = pErlang::Atom->new(name => 'hello', subtype => ATOM_EXT);
     my $encoder = pErlang::Encoder::Strict->new();
     $encoder->visit($atom);
@@ -37,7 +40,6 @@ use pErlang::Type qw(:constants);
 
 {
     my $TEST_NAME = 'Encode a SMALL_ATOM_UTF8_EXT';
-    use pErlang::Atom;
     use utf8;
     my $str = 'хорошо';
     utf8::encode($str);
@@ -50,7 +52,6 @@ use pErlang::Type qw(:constants);
 
 {
     my $TEST_NAME = 'Encode a NIL';
-    use pErlang::Nil;
 
     my $nil = pErlang::Nil->new();
     my $encoder = pErlang::Encoder::Strict->new();
@@ -60,7 +61,6 @@ use pErlang::Type qw(:constants);
 }
 {
     my $TEST_NAME = 'Encode a Binary';
-    use pErlang::Binary;
 
     my $binary = pErlang::Binary->new(data => 'test');
     my $encoder = pErlang::Encoder::Strict->new();
@@ -71,7 +71,6 @@ use pErlang::Type qw(:constants);
 
 {
     my $TEST_NAME = 'Encode a List';
-    use pErlang::List;
 
     my $list = pErlang::List->new();
     $list->push(pErlang::Binary->new(data => 'abc'));
@@ -80,4 +79,14 @@ use pErlang::Type qw(:constants);
     $encoder->visit($list);
     my $result = $encoder->result();
     ok($result eq "\x6C\x00\x00\x00\x01\x6D\x00\x00\x00\x03\x61\x62\x63\x6A", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a Float';
+
+    my $float = pErlang::Float->new(value => 3.5);
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($float);
+    my $result = $encoder->result();
+    ok($result eq "\x46\x40\x0C\x00\x00\x00\x00\x00\x00", $TEST_NAME);
 }

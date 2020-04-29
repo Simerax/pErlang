@@ -57,6 +57,12 @@ sub visit_pErlang_List {
     $self->visit($list->tail());
 }
 
+sub visit_pErlang_Float {
+    my($self, $float) = @_;
+    # TODO: old float type
+    $self->data($self->data() . NEW_FLOAT_EXT . pack('d>', $float->value()));
+}
+
 sub result {
     my($self) = @_;
     return $self->data();
