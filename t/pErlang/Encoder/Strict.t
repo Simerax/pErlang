@@ -1,4 +1,4 @@
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -9,6 +9,7 @@ use pErlang::Atom;
 use pErlang::Nil;
 use pErlang::Binary;
 use pErlang::Float;
+use pErlang::Tuple;
 
 
 {
@@ -89,4 +90,21 @@ use pErlang::Float;
     $encoder->visit($float);
     my $result = $encoder->result();
     ok($result eq "\x46\x40\x0C\x00\x00\x00\x00\x00\x00", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a Tuple';
+
+    my $tuple = pErlang::Tuple->new(
+        elements => [
+            pErlang::Atom->new(name => 'ok', subtype => ATOM_EXT),
+            pErlang::Float->new(value => 3.5),
+            pErlang::Float->new(value => 2344.0)
+        ],
+    );
+
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($tuple);
+    my $result = $encoder->result();
+    ok($result eq "\x68\x03\x64\x00\x02\x6F\x6B\x46\x40\x0C\x00\x00\x00\x00\x00\x00\x46\x40\xA2\x50\x00\x00\x00\x00\x00", $TEST_NAME);
 }

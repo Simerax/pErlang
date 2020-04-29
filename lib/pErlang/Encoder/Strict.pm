@@ -63,6 +63,18 @@ sub visit_pErlang_Float {
     $self->data($self->data() . NEW_FLOAT_EXT . pack('d>', $float->value()));
 }
 
+sub visit_pErlang_Tuple {
+    my ($self, $tuple) = @_;
+    my $tuple_data = $tuple->subtype();
+    if($tuple->subtype() eq SMALL_TUPLE_EXT) {
+        $tuple_data .= pack('C', $tuple->arity());
+    } else {
+        $tuple_data .= pack('N', $tuple->arity());
+    }
+    $self->data($self->data() . $tuple_data);
+    $self->visit($_) foreach(@{$tuple->elements()});
+}
+
 sub result {
     my($self) = @_;
     return $self->data();

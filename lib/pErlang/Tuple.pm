@@ -1,12 +1,9 @@
 package pErlang::Tuple;
 use Mouse;
+use pErlang::Type qw(:constants);
 
 extends 'pErlang::Datastructure';
 
-has arity => (
-    is => 'rw',
-    isa => 'Int',
-);
 
 has elements => (
     is => 'rw',
@@ -17,6 +14,7 @@ has subtype => (
     is => 'rw',
     isa => 'Str',
     required => 1,
+    default => SMALL_TUPLE_EXT,
     trigger => sub {
         my ($self, $type) = @_;
         if($type ne pErlang::Type::SMALL_TUPLE_EXT &&
@@ -26,6 +24,11 @@ has subtype => (
         }
     },
 );
+
+sub length {return arity(@_)};
+sub arity {
+    return scalar @{$_[0]->elements()};
+}
 
 sub at {
     return $_[0]->elements()->[$_[1]];
