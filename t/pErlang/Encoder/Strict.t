@@ -1,4 +1,4 @@
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 require_ok('pErlang::Encoder::Strict');
 
@@ -11,6 +11,7 @@ use pErlang::Binary;
 use pErlang::Float;
 use pErlang::Tuple;
 use pErlang::String;
+use pErlang::Map;
 
 
 {
@@ -118,4 +119,16 @@ use pErlang::String;
     $encoder->visit($string);
     my $result = $encoder->result();
     ok($result eq "\x6B\x00\x04\x6F\x69\x6A\x6C", $TEST_NAME);
+}
+
+{
+    my $TEST_NAME = 'Encode a Map';
+
+    my $map = pErlang::Map->new();
+    $map->put("a", pErlang::Float->new(value => 2.3));
+
+    my $encoder = pErlang::Encoder::Strict->new();
+    $encoder->visit($map);
+    my $result = $encoder->result();
+    ok($result eq "\x74\x00\x00\x00\x01\x6D\x00\x00\x00\x01\x61\x46\x40\x02\x66\x66\x66\x66\x66\x66", $TEST_NAME);
 }

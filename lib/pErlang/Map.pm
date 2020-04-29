@@ -34,6 +34,11 @@ sub contains {
     return -1;
 }
 
+sub num_of_pairs {
+    my($self) = @_;
+    return scalar @{$self->pairs()};
+}
+
 sub put {
     my ($self, $key, $value) = @_;
 

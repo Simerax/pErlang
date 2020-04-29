@@ -80,6 +80,19 @@ sub visit_pErlang_String {
     $self->data($self->data() . STRING_EXT . pack("n", $string->length()) . $string->data());
 }
 
+sub visit_pErlang_Map {
+    my($self, $map) = @_;
+
+    $self->data($self->data() . MAP_EXT . pack("N", $map->num_of_pairs()));
+    $self->visit($_) foreach(@{$map->pairs()});
+}
+
+sub visit_pErlang_Pair {
+    my ($self, $pair) = @_;
+    $self->visit($pair->a());
+    $self->visit($pair->b());
+}
+
 sub result {
     my($self) = @_;
     return $self->data();
