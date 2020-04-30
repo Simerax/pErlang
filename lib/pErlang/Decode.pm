@@ -50,7 +50,7 @@ sub decode {
     my ($stream) = @_;
     my $msg_prefix;
     sread($stream, \$msg_prefix, 1);
-    if($msg_prefix ne "\x83") {
+    if($msg_prefix ne VERSION_PREFIX) {
         return ret(0, "Invalid Message Prefix");
     }
     my $type;
