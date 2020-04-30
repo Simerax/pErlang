@@ -19,9 +19,31 @@ use pErlang::String;
 # https://github.com/Perl/perl5/issues/10125
 our $USE_PERL_READ_FUNCTION = 0;
 
+# Default Inflation Function
+our $ZLIB_INFLATION_FUNC = sub {
+    my ($stream) = @_;
+
+    # required so that it is not a compile time requirement and is only lodaded on demand
+    require Compress::Zlib; 
+
+    my ($z, $output, $status, $buffer);
+    ($z, $status) = Compress::Zlib::inflateInit();
+
+    while(sread($stream, \$buffer, 4096)) {
+        ($output, $status) = $z->inflate(\$buffer);
+        last if $status == Compress::Zlib::Z_STREAM_END();
+        if($status != Compress::Zlib::Z_OK()) {
+            return ret(0, "Failed to read zlib compressed stream Compress::Zlib Error: $status");
+        }
+    }
+    return ret(1, $output);
+};
+
 sub ret {
     return wantarray ? @_ : shift;
 }
+
+
 
 # decodes a message on given stream
 sub decode {
@@ -31,7 +53,15 @@ sub decode {
     if($msg_prefix ne "\x83") {
         return ret(0, "Invalid Message Prefix");
     }
-    return decode_term($stream);
+    my $type;
+    sread($stream, \$type, 1);
+
+    if(is_zlib_compressed($type)) {
+        return decode_zlib_compressed($stream);
+    } else {
+        return decode_term($stream, $type);
+    }
+
 }
 
 sub decode_term {
@@ -208,6 +238,35 @@ sub sread {
     } else {
         return sysread($handle, $$buffer_ref, $len);
     }
+}
+
+sub decode_zlib_compressed {
+    my ($stream) = @_;
+
+    my $size_inflated;
+    sread($stream, \$size_inflated, 4);
+    $size_inflated = unpack("N", $size_inflated);
+
+    my ($ok, $result, $msg);
+
+    ($ok, $result) = $ZLIB_INFLATION_FUNC->($stream, $size_inflated);
+    
+    if(!$ok) {
+        return ret(0, "Inflation of zlib compressed stream failed $result");
+    }
+
+    my $s;
+    if(!open($s , '<', \$result)) {
+        return ret(0, "Could not open Stream to read inflated data: $!");
+    }
+
+    my $save = $USE_PERL_READ_FUNCTION;
+    $USE_PERL_READ_FUNCTION = 1;
+    ($ok, $msg) = decode_term($s);
+    $USE_PERL_READ_FUNCTION = $save;
+    close($s);
+    undef($result);
+    return ret($ok, $msg);
 }
 
 1;

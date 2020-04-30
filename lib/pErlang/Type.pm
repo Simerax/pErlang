@@ -19,6 +19,7 @@ our @EXPORT_OK = qw(
     is_atom_utf8_small
     is_atom_ext
     is_nil
+    is_zlib_compressed
     NIL_EXT
     ATOM_EXT
     SMALL_ATOM_UTF8_EXT
@@ -34,6 +35,7 @@ our @EXPORT_OK = qw(
     LIST_EXT
     BINARY_EXT
     VERSION_PREFIX
+    ZLIB_COMPRESSION
 );
 our %EXPORT_TAGS = (
     all => [@EXPORT_OK],
@@ -52,7 +54,8 @@ our %EXPORT_TAGS = (
         'STRING_EXT',
         'LIST_EXT',
         'BINARY_EXT',
-        'VERSION_PREFIX'
+        'VERSION_PREFIX',
+        'ZLIB_COMPRESSION'
     ],
 );
 
@@ -81,7 +84,12 @@ use constant {
     BINARY_EXT => chr(109),
 
     VERSION_PREFIX => chr(131),
+    ZLIB_COMPRESSION => chr(80),
 };
+
+sub is_zlib_compressed {
+    return $_[0] eq ZLIB_COMPRESSION;
+}
 
 sub is_nil {
     return $_[0] eq NIL_EXT;
