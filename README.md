@@ -13,7 +13,7 @@ Encoding and Decoding of Erlang Datastructures in Perl using the [Erlang Term Fo
   * Tuples
 
 * Encoding of `pErlang::` Structures back to the [Erlang Term Format](http://erlang.org/doc/apps/erts/erl_ext_dist.html)
-* Support for Zlib-Compressed Erlang Terms
+* Decoding of Zlib-Compressed Messages
 ## Planned
 * Converting `pErlang::` Structures into native perl structures
 * Improving quality of `pErlang::` Classes 
