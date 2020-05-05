@@ -7,7 +7,9 @@ extends 'pErlang::Datastructure';
 
 use overload
     '+' => \&add,
+    '-' => \&subtract,
     '==' => \&equals,
+    '""' => \&to_string;
 
 has value => (
     is => 'rw',
@@ -28,6 +30,20 @@ has subtype => (
         }
     },
 );
+
+sub to_string {
+    my ($self) = @_;
+    return $self->value();
+}
+
+sub subtract {
+    my ($self, $other, $swap) = @_;
+    if($swap) {
+        return pErlang::Float->new(value => $other - $self->value(), subtype => $self->subtype());
+    } else {
+        return pErlang::Float->new(value => $self->value() - $other, subtype => $self->subtype());
+    }
+}
 
 sub add {
     my ($self, $other, $swap) = @_;
